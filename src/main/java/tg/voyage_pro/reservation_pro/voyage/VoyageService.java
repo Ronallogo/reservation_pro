@@ -1,7 +1,7 @@
 package tg.voyage_pro.reservation_pro.voyage;
 
 import java.util.List;
-import java.util.stream.Collector;
+ 
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,4 +56,23 @@ public class VoyageService {
         return voyage ; 
     }
 
+    public boolean delete(Long idVoyage){
+        if(this.vr.existsById(idVoyage)){
+            this.vr.deleteById(idVoyage);
+            return true ; 
+        }
+        return false ; 
+    }
+
+
+    public VoyageDTO get(Long idVoyage){
+        VOYAGE voyage = this.vr.findById(idVoyage).orElse(null) ; 
+
+        return  VoyageDTO.builder()
+            .idVoyage(voyage.getIdVoyage())
+            .dateVoyage( voyage.getDateVoyage()) 
+            .libelleVoyage( voyage.getLibelleVoyage())
+            .build() ; 
+
+    }
 }
