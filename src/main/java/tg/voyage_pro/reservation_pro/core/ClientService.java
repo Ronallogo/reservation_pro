@@ -1,9 +1,13 @@
-package tg.voyage_pro.reservation_pro.client;
+package tg.voyage_pro.reservation_pro.core;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import tg.voyage_pro.reservation_pro.Model.CLIENT;
+import tg.voyage_pro.reservation_pro.database.ClientRepository;
+import tg.voyage_pro.reservation_pro.dto.ClientDTO;
 import tg.voyage_pro.reservation_pro.exceptions.ClientNotFoundException;
  
 
