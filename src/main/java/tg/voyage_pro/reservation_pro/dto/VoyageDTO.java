@@ -1,4 +1,4 @@
-package tg.voyage_pro.reservation_pro.voyage;
+package tg.voyage_pro.reservation_pro.dto;
 
  
 import lombok.*;

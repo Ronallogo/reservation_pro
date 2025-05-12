@@ -1,4 +1,4 @@
-package tg.voyage_pro.reservation_pro.client;
+package tg.voyage_pro.reservation_pro.controllers;
 
  
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import tg.voyage_pro.reservation_pro.core.ClientService;
+import tg.voyage_pro.reservation_pro.dto.ClientDTO;
 
 import java.util.List;
 
@@ -24,7 +27,7 @@ public class ClientController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> create( @RequestBody ClientDTO c){
-            ClientDTO client = this.clientService.create(c);
+            var client = this.clientService.create(c);
             return new ResponseEntity<>(client , HttpStatusCode.valueOf(200)) ;
 
     }

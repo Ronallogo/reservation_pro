@@ -1,4 +1,4 @@
-package tg.voyage_pro.reservation_pro.client;
+package tg.voyage_pro.reservation_pro.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

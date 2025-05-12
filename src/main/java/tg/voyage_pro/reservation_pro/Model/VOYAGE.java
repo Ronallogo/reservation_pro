@@ -1,9 +1,8 @@
-package tg.voyage_pro.reservation_pro.voyage;
+package tg.voyage_pro.reservation_pro.Model;
 
  
 import jakarta.persistence.*;
 import lombok.*;
-import tg.voyage_pro.reservation_pro.reservation.RESERVATION;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,6 +21,7 @@ public class VOYAGE implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_voyage")
     private Long idVoyage ;
     @Column(name = "libelle_voyage" , length = 100  , nullable = false)
     private String libelleVoyage ;

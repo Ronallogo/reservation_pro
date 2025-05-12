@@ -1,9 +1,8 @@
-package tg.voyage_pro.reservation_pro.client;
+package tg.voyage_pro.reservation_pro.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
-import tg.voyage_pro.reservation_pro.reservation.RESERVATION;
 
 import java.io.Serializable;
 import java.util.Date;

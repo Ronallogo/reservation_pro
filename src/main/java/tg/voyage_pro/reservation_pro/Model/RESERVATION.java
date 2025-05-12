@@ -1,4 +1,4 @@
-package tg.voyage_pro.reservation_pro.reservation;
+package tg.voyage_pro.reservation_pro.Model;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -18,8 +18,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import tg.voyage_pro.reservation_pro.client.CLIENT;
-import tg.voyage_pro.reservation_pro.voyage.VOYAGE;
  
 
 
