@@ -19,8 +19,13 @@ public class HandleController {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-     @ExceptionHandler(VoyageNotFoundException.class )
-    public ResponseEntity<?> handlVoyagetNotFoundException(VoyageNotFoundException ex, WebRequest request) {
+    @ExceptionHandler(VoyageNotFoundException.class )
+    public ResponseEntity<?> handleVoyagetNotFoundException(VoyageNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ReservationNotFoundException.class )
+    public ResponseEntity<?> handleReservationtNotFoundException(ReservationNotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 

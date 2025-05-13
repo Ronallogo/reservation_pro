@@ -2,8 +2,7 @@ package tg.voyage_pro.reservation_pro.controllers;
 
 import java.util.List;
 
-
-import org.hibernate.engine.transaction.jta.platform.internal.SynchronizationRegistryBasedSynchronizationStrategy;
+ 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
