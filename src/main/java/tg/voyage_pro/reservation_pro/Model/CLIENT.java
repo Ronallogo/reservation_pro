@@ -28,7 +28,7 @@ public class CLIENT implements Serializable {
     private String nomClient ;
     @Column(name="prenom_client"  ,  nullable = false , length = 100)
     private String prenomClient ;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy", timezone = "UTC")
     @Column(name = "date_naiss" , nullable = false)
     private Date dateNaiss ;
     @Column( name="mail_client" , nullable = false , length = 100)

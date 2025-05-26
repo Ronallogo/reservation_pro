@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tg.voyage_pro.reservation_pro.Model.VOYAGE;
 import tg.voyage_pro.reservation_pro.core.VoyageService;
 import tg.voyage_pro.reservation_pro.dto.VoyageDTO;
 
@@ -39,14 +40,14 @@ public class VoyageController {
 
     @GetMapping(value = "/getAll")
     public  ResponseEntity<?> getAll(){
-        System.out.println("je reçois");
-        List<VoyageDTO> listVoyage = this.vs.getAll() ; 
+
+        List<VoyageDTO> listVoyage = this.vs.getAll() ;
         return new ResponseEntity<>( listVoyage , HttpStatus.OK) ; 
     }
 
     @GetMapping(value="/get/{idVoyage}")
     public ResponseEntity<?> get(@PathVariable Long idVoyage){
-        VoyageDTO v = this.vs.get(idVoyage);
+         VOYAGE v = this.vs.get(idVoyage);
         return new ResponseEntity<>(v , HttpStatus.FOUND);
     }
 
@@ -57,9 +58,9 @@ public class VoyageController {
     }
 
 
-    @PutMapping(value="/update")
-    public ResponseEntity<?> update(@RequestBody VoyageDTO voyage){
-        var v = this.vs.update(voyage);
+    @PutMapping(value="/update/{idVoyage}")
+    public ResponseEntity<?> update(  @PathVariable Long idVoyage ,   @RequestBody   VoyageDTO voyage){
+        var v = this.vs.update(idVoyage ,  voyage);
         return new ResponseEntity<>(v , HttpStatus.OK);
     }
 }

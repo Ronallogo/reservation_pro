@@ -1,130 +1,125 @@
-package tg.voyage_pro.reservation_pro.core;
+    package tg.voyage_pro.reservation_pro.core;
 
 
- 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
- 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
- 
- 
-import tg.voyage_pro.reservation_pro.Model.CLIENT;
-import tg.voyage_pro.reservation_pro.database.ClientRepository;
-import tg.voyage_pro.reservation_pro.dto.ClientDTO;
-import tg.voyage_pro.reservation_pro.exceptions.ClientNotFoundException;
- 
-
- 
-import java.util.List;
-import java.util.stream.Collectors;
- 
-
-
-@Service
-@Transactional
- 
-public class ClientService {
-    @Autowired
-    private   ClientRepository cr ;
     
- 
- 
-   
+    
+    
+    import org.springframework.beans.factory.annotation.Autowired;
+    
+    import org.springframework.stereotype.Service;
+    import org.springframework.transaction.annotation.Transactional;
+    
+    
+    import tg.voyage_pro.reservation_pro.Model.CLIENT;
+    import tg.voyage_pro.reservation_pro.database.ClientRepository;
+    import tg.voyage_pro.reservation_pro.dto.ClientDTO;
+    import tg.voyage_pro.reservation_pro.exceptions.ClientNotFoundException;
+    import tg.voyage_pro.reservation_pro.mapperImpl.ClientMapperImpl;
+    
 
-    public CLIENT create(ClientDTO client){
-        CLIENT c =  this.cr.save(
-            CLIENT.builder()
-            .nomClient(client.getNomClient())
-            .prenomClient(client.getPrenomClient())
-            .mailClient( client.getMailClient())
-            .sexeClient( client.getSexeClient())
-            .dateNaiss( client.getDateNaiss())
-            .login( client.getLogin())
-            .telClient( client.getTelClient())
-            .password( client.getPassword())
-            .build());
+
+    import java.util.List;
+    
+    
+
+
+    @Service
+    @Transactional
+    
+    public class ClientService {
+        @Autowired
+        private   ClientRepository cr ;
+
+
+        private ClientMapperImpl clientMapper = new ClientMapperImpl() ;
+
+
+
+
+
+
         
-        c.setLogin("hided");
-        c.setPassword( "hided");
-        return c ; 
-       
-    }
 
-
-    public List<ClientDTO> getAllClient(){
-        return this.cr.findAll().stream().map(x->
-        ClientDTO.builder()
-        .nomClient(x.getNomClient())
-        .prenomClient(x.getPrenomClient())
-        .mailClient( x.getMailClient())
-        .sexeClient(x.getSexeClient())
-        .dateNaiss( x.getDateNaiss())
-        .telClient( x.getTelClient()) 
-        .build()
+        public CLIENT create(CLIENT client){
+            return this.cr.save(client);
         
-        ).collect(Collectors.toList());
-        
-    }
-
-
-    public ClientDTO getClient(Long idClient){
-       
-        if(!this.cr.existsById(idClient)){
-            throw new ClientNotFoundException("Aucun client n'a ce numéro");
         }
 
-        var client =  this.cr.findById(idClient).map( x-> 
-        
-            ClientDTO.builder()
-            .idClient(x.getIdClient())
-            .nomClient(x.getNomClient())
-            .prenomClient(x.getPrenomClient())
-            .mailClient( x.getMailClient())
-            .sexeClient(x.getSexeClient())
-            .dateNaiss( x.getDateNaiss())
-            .telClient( x.getTelClient()) 
-            .build()
-        );
 
-        return client.get() ; 
-        
-
-    }
-
-    public ClientDTO update(ClientDTO client){
-       if(!this.cr.existsById(client.getIdClient())){
-            throw new ClientNotFoundException("Aucun client n'a ce numéro");
+        public List<ClientDTO> getAllClient(){
+            return   this.clientMapper.toListDtos(this.cr.findAllOrderByIdClientDesc())   ;
+            
         }
 
-        CLIENT c = this.cr.findById(client.getIdClient()).get();
+    /*  public List<ClientDTO> searchClient(ClientDTO client){
+            return  this.clientMapper.toListDtos(this.cr.searchClient( 
+                client.getNomClient(),
+                client.getPrenomClient(),
+                client.getMailClient(),
+                client.getTelClient(),
+                client.getMailClient(),
+                client.getDateNaiss(),
+                client.getSexeClient(),
+            
+            ));
+        }*/
 
-        client.setLogin(c.getLogin());
-        client.setPassword(c.getPassword());
 
-        BeanUtils.copyProperties(client, c);
-        this.cr.save(c);
-        client.setLogin("");
-        client.setPassword( "");
+        public  ClientDTO getClient(Long idClient){
+        
+            var client = this.cr.findById(idClient).orElseThrow(()-> new ClientNotFoundException("client not found"));
+            if(client == null){
+                return null ;
+            }
+            return  this.clientMapper.toDto(client);
 
-        return client ; 
-
-
-
-
-    }
-
-    public boolean delete(Long idClient){
-        if(this.cr.existsById(idClient)){
-            this.cr.deleteById(idClient); ;
-            return true ;
         }
-        return false ;
+
+        public  ClientDTO update(Long idClient ,     ClientDTO client){
+    
+            if(idClient == null){
+                throw new NullPointerException("idClient est null");
+            }
+            var c = this.cr.findById(idClient).orElseThrow(()-> new ClientNotFoundException("Aucun client n'a ce numéro"));
+            String login = c.getLogin();
+            String password = c.getPassword();
+            c =  this.clientMapper.toEntity(client) ; 
+            c.setLogin(login);
+            c.setPassword(password);
+            System.out.println(c.toString());
+            
+            return  this.clientMapper.toDto(this.cr.save(c)) ;
+
+
+        }
+
+        public boolean delete(Long idClient){
+            if(this.cr.existsById(idClient)){
+                this.cr.deleteById(idClient); ;
+                return true ;
+            }
+            return false ;
+        }
+
+
+        public List<ClientDTO> searchClient(ClientDTO client){
+           
+            return this.clientMapper.toListDtos(this.cr.searchClient(
+                client.getNomClient(),
+                client.getMailClient(),
+                client.getDateNaiss().toString(),
+                client.getSexeClient(),
+                client.getTelClient()
+                 
+            ));
+        }
+
+        public List<ClientDTO> refreshClient(){
+            return this.clientMapper.toListDtos(this.cr.findAllOrderByIdClientDesc());
+        }
+
+
+
+
+
     }
-
-
-
-
-
-
-}

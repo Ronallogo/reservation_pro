@@ -2,6 +2,7 @@ package tg.voyage_pro.reservation_pro.Model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -46,6 +47,15 @@ public class RESERVATION implements Serializable{
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date dateReservation ; 
+
+    @ManyToOne
+    @JoinColumn(name = "type_billet_id" )
+    private TYPE_BILLET typeBillet ;
+
+    private List<PAIEMENT> paiementList ;
+
+
+
 
 
 

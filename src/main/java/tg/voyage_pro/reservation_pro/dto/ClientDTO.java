@@ -4,8 +4,10 @@ package tg.voyage_pro.reservation_pro.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
  
 import lombok.*;
+ 
 
 import java.util.Date;
+ 
 
 @Getter
 @Setter
@@ -25,6 +27,7 @@ public class ClientDTO {
     private String sexeClient ;
     private String login ;
     private String password ;
+
 
 
 }

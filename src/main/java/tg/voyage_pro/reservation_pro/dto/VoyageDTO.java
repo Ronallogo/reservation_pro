@@ -15,7 +15,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Builder
 public class VoyageDTO {
     private Long idVoyage ;
-    private String libelleVoyage ;
+    private String  departVoyage ;
+    private String arriveVoyage ;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date dateVoyage ;
 }

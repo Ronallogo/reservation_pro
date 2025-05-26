@@ -1,6 +1,7 @@
 package tg.voyage_pro.reservation_pro.Model;
 
  
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,9 +24,12 @@ public class VOYAGE implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_voyage")
     private Long idVoyage ;
-    @Column(name = "libelle_voyage" , length = 100  , nullable = false)
-    private String libelleVoyage ;
+    @Column(name = "depart_voyage" , length = 100  , nullable = false)
+    private String departVoyage  ;
+    @Column(name = "arrive_voyage" , length = 100  , nullable = false)
+    private String arriveVoyage ;
     @Column(name = "date_voyage" , nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date dateVoyage ;
 
     @OneToMany(mappedBy = "voyage" , cascade = CascadeType.ALL)

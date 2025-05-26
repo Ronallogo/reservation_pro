@@ -33,10 +33,20 @@ public class HandleController {
     public ResponseEntity<?> handleNullValueException(Exception ex, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(TypeBilletNotFoundException.class)
+    public ResponseEntity<?> handleTypeBilletNotFoundException(TypeBilletNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler( AgentNotFoundException.class)
+    public ResponseEntity<?> handleAgentNotFoundException(AgentNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
  
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
 }
