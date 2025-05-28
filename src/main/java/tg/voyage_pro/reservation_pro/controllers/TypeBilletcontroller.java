@@ -12,7 +12,8 @@ import tg.voyage_pro.reservation_pro.core.TypeBilletService;
 import tg.voyage_pro.reservation_pro.dto.TypeBilletDTO;
 
 @RestController
-@RequestMapping(path = "/tg/voyage_pro/reservation/auth/typeBillet")
+@RequestMapping(path = "/tg/voyage_pro/reservation/auth/ticket")
+@CrossOrigin(origins = "*")
 public class  TypeBilletcontroller {
 
 
@@ -37,7 +38,7 @@ public class  TypeBilletcontroller {
     }
 
     @PutMapping(path = "/update/{idType}")
-    public TYPE_BILLET update(@PathVariable Long idType , @RequestBody TYPE_BILLET type){
+    public  TypeBilletDTO update(@PathVariable Long idType , @RequestBody  TypeBilletDTO type){
         return this.service.update(idType , type);
 
     }

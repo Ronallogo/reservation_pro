@@ -28,8 +28,10 @@ public class AGENT {
     @JsonFormat(shape = JsonFormat.Shape.STRING , pattern = "dd/mm/yyyy" , timezone = "UTC")
     @Column(name = "date_naiss" , nullable = false)
     private Date dateNaiss ;
-    @Column(name = "te_agent" , nullable = false , length = 20)
+    @Column(name = "tel_agent" , nullable = false , length = 20)
     private String  telAgent ;
+    @Column(name = "mail_agent" , nullable = false , length = 20)
+    private String  mailAgent ;
     @OneToMany(mappedBy = "agent" , cascade = CascadeType.ALL)
     private List<PAIEMENT> paiementList ;
 
