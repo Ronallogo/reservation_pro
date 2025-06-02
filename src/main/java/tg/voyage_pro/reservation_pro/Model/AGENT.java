@@ -3,17 +3,32 @@ package tg.voyage_pro.reservation_pro.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+ 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import tg.voyage_pro.reservation_pro.security.token.TOKEN;
+import tg.voyage_pro.reservation_pro.security.user._User;
+import lombok.experimental.SuperBuilder;
 import java.util.Date;
 import java.util.List;
 
+ 
+
 @Entity
 @Setter
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Table(name="agent")
-public class AGENT {
+@Table(
+    name = "agent",
+    uniqueConstraints = @UniqueConstraint(
+        name = "unique_email", 
+        columnNames = {"mailAgent"}
+    ))
+public class AGENT extends _User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +45,18 @@ public class AGENT {
     private Date dateNaiss ;
     @Column(name = "tel_agent" , nullable = false , length = 20)
     private String  telAgent ;
-    @Column(name = "mail_agent" , nullable = false , length = 20)
+    @Column(name = "mail_agent" , nullable = false , length = 75)
     private String  mailAgent ;
+   
+
     @OneToMany(mappedBy = "agent" , cascade = CascadeType.ALL)
     private List<PAIEMENT> paiementList ;
+    @OneToMany(mappedBy = "agent" , cascade = CascadeType.ALL)
+    private List<TOKEN> tokenList ;
+
+
+
+    
+     
 
 }

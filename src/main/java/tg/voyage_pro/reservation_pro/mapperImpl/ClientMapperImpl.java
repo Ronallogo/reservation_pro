@@ -9,17 +9,7 @@ import java.util.stream.Collectors;
 
 public class ClientMapperImpl implements ClientMapper {
     public List<ClientDTO> toListDtos(List<CLIENT> list){
-
-        return  list.stream().map(x->
-                ClientDTO.builder().idClient(x.getIdClient())
-                        .nomClient(x.getNomClient())
-                        .prenomClient(x.getPrenomClient())
-                        .dateNaiss(x.getDateNaiss())
-                        .mailClient(x.getMailClient())
-                        .sexeClient(x.getSexeClient())
-                        .telClient(x.getTelClient())
-                        .build()
-        ).collect(Collectors.toList());
+        return  list.stream().map(this::toDto).collect(Collectors.toList());
     }
 
 
@@ -33,6 +23,8 @@ public class ClientMapperImpl implements ClientMapper {
                 .mailClient(x.getMailClient())
                 .sexeClient(x.getSexeClient())
                 .telClient(x.getTelClient())
+                .login(x.getLogin())
+                .password(x.getPassword())
                 .build();
     }
 
@@ -46,12 +38,13 @@ public class ClientMapperImpl implements ClientMapper {
                 .mailClient(x.getMailClient())
                 .sexeClient(x.getSexeClient())
                 .telClient(x.getTelClient())
+                .role(x.getRole())
                 .build() ;
     }
 
     @Override
     public List<ClientDTO> toListDto(List<CLIENT> list) {
-        return null;
+        return list.stream().map(this::toDto).collect(Collectors.toList());
     }
 
     @Override

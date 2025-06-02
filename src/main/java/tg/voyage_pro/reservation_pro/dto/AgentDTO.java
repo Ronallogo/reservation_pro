@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import tg.voyage_pro.reservation_pro.security.user.Roles;
 
 
 @Setter
@@ -31,4 +32,11 @@ public class AgentDTO {
     private Date dateNaiss ;
 
     private String  telAgent ;
+
+    private String mailAgent ;
+
+    private String login ; 
+    private String  password ; 
+
+    private Roles role ;
 }

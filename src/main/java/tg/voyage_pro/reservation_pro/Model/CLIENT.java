@@ -3,21 +3,30 @@ package tg.voyage_pro.reservation_pro.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import tg.voyage_pro.reservation_pro.security.token.TOKEN;
+import tg.voyage_pro.reservation_pro.security.user._User;
 
-import java.io.Serializable;
+ 
 import java.util.Date;
 import java.util.List;
 
+ 
 
 @Entity
-@Table(name = "client")
+@Table(
+    name = "client" , 
+    uniqueConstraints = @UniqueConstraint(
+        name = "unique_email", 
+        columnNames = {"mailClient"}
+    ))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
-public class CLIENT implements Serializable {
+public class CLIENT extends _User {
 
 
     @Id
@@ -37,13 +46,16 @@ public class CLIENT implements Serializable {
     private String telClient ;
     @Column(name="sexe_client" , nullable = false)
     private String sexeClient ;
-    @Column(name = "login" , nullable = false ,  length = 100)
-    private String login ;
-    @Column(name="password" , nullable = false , length = 50)
-    private String password ;
+     
 
     @OneToMany(mappedBy = "client" , cascade = CascadeType.ALL)
-    private List<RESERVATION> reservations ; 
+    private List<RESERVATION> reservations ;
+
+    @OneToMany(mappedBy = "client" , cascade = CascadeType.ALL)
+    private List<TOKEN> tokenList ;
+
+    
+
 
 
 

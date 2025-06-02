@@ -2,6 +2,7 @@ package tg.voyage_pro.reservation_pro.database;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,6 +40,9 @@ public interface ClientRepository extends JpaRepository<CLIENT , Long> {
         @Param("telephone") String telephone 
     
     );
+
+    @Query(value = "SELECT * FROM client c WHERE c.login = :login", nativeQuery = true)
+    Optional<CLIENT> findByLogin(@Param("login") String login);
 
     /*(:nom IS NULL OR (c.nom_client LIKE CONCAT('%' , :nom , '%') OR c.prenom_client LIKE CONCAT('%' , :nom , '%')))  */
 
