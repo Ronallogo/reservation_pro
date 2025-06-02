@@ -33,29 +33,27 @@ public class ApplicationConfig {
     private final ClientRepository clientRepository ;
 
 
-    @Bean
+    
   
     public UserDetailsService AgentDetailsService(){ 
         return login -> this.agentRepository.findByLogin(login)
         .orElseThrow(() -> new  AgentNotFoundException("Agent not found"));
         
     }
-
-    @Bean
+ 
     public UserDetailsService ClientDetailsService(){
         return login -> this.clientRepository.findByLogin(login)
         .orElseThrow(() -> new  ClientNotFoundException("Client not found"));
     }
 
     
-   @Bean
+  
    public AuthenticationProvider ClientAuthenticationProvider(){
       DaoAuthenticationProvider authProvider    = new DaoAuthenticationProvider() ;
       authProvider.setUserDetailsService(ClientDetailsService());
       authProvider.setPasswordEncoder(passwordEncoder());
       return authProvider ;
   }
-   @Bean
  
    public AuthenticationProvider AgentAuthenticationProvider(){
       DaoAuthenticationProvider authProvider    = new DaoAuthenticationProvider() ;
@@ -80,6 +78,7 @@ public class ApplicationConfig {
     public LogoutHandler logoutHandler(){
         return  new SecurityContextLogoutHandler();
     }
+    
     
 
 }

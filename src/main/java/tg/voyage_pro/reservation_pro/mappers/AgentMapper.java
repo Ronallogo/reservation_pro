@@ -9,7 +9,9 @@ import tg.voyage_pro.reservation_pro.dto.AgentDTO;
 
 import java.util.List;
 
- 
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "spring")
 public interface AgentMapper {
     AGENT toEntity( AgentDTO agentDto);
     AgentDTO toDto(AGENT agent);

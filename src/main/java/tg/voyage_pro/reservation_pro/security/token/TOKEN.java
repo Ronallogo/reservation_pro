@@ -1,7 +1,7 @@
 package tg.voyage_pro.reservation_pro.security.token;
  
 
-import java.sql.Date;
+import java.util.Date;
 
  
 
@@ -46,19 +46,18 @@ public class TOKEN{
     private boolean expired ;
  
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId; // Référence soit Agent, soit Client
+     // Référence soit Agent, soit Client
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Roles role; // CLIENT ou AGENT
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "agent", insertable = true, updatable = false , nullable = true)
     private AGENT agent;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "client", insertable = true, updatable = false , nullable = true)
     private CLIENT client;
 
 

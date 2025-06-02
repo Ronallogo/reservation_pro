@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import tg.voyage_pro.reservation_pro.security.token.TOKEN;
+ 
 import tg.voyage_pro.reservation_pro.security.user._User;
 import lombok.experimental.SuperBuilder;
 import java.util.Date;
@@ -51,8 +51,7 @@ public class AGENT extends _User{
 
     @OneToMany(mappedBy = "agent" , cascade = CascadeType.ALL)
     private List<PAIEMENT> paiementList ;
-    @OneToMany(mappedBy = "agent" , cascade = CascadeType.ALL)
-    private List<TOKEN> tokenList ;
+ 
 
 
 

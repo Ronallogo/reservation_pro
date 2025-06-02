@@ -7,6 +7,13 @@ import tg.voyage_pro.reservation_pro.mappers.ClientMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
+
+
+@Component
+@RequiredArgsConstructor
 public class ClientMapperImpl implements ClientMapper {
     public List<ClientDTO> toListDtos(List<CLIENT> list){
         return  list.stream().map(this::toDto).collect(Collectors.toList());

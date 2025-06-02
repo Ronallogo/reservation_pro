@@ -3,7 +3,9 @@ package tg.voyage_pro.reservation_pro.mapperImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hibernate.annotations.Comment;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import tg.voyage_pro.reservation_pro.Model.AGENT;
@@ -11,7 +13,10 @@ import tg.voyage_pro.reservation_pro.dto.AgentDTO;
  
 import tg.voyage_pro.reservation_pro.mappers.AgentMapper;
 @RequiredArgsConstructor
+@Component
 public class AgentMapperImpl implements AgentMapper{
+
+
     private final PasswordEncoder passwordEncoder ;
     @Override
     public AGENT toEntity(AgentDTO dto) {
