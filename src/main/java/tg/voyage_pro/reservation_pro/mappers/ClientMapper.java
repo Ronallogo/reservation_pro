@@ -2,12 +2,13 @@ package tg.voyage_pro.reservation_pro.mappers;
 
 import java.util.List;
 
- 
+import org.mapstruct.Mapper;
+
 import tg.voyage_pro.reservation_pro.Model.CLIENT;
 import tg.voyage_pro.reservation_pro.dto.ClientDTO;
 
 
-
+@Mapper(componentModel = "spring")
 public interface ClientMapper {
     CLIENT toEntity(ClientDTO clientDto);
     ClientDTO toDto(CLIENT client); 
@@ -16,6 +17,8 @@ public interface ClientMapper {
     ClientDTO toCustomDto(CLIENT c)   ;
 
     List<ClientDTO> toCustomDtos(List<CLIENT> list) ; 
+
+    CLIENT toEntityForRegistration(ClientDTO client) ;    
     
 
 }

@@ -1,4 +1,4 @@
-package tg.voyage_pro.reservation_pro.security.token;
+package tg.voyage_pro.reservation_pro.Security.Token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

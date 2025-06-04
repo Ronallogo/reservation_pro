@@ -9,8 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
  
-import tg.voyage_pro.reservation_pro.security.user._User;
 import lombok.experimental.SuperBuilder;
+import tg.voyage_pro.reservation_pro.Security.entities.User;
+
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
         name = "unique_email", 
         columnNames = {"mailAgent"}
     ))
-public class AGENT extends _User{
+public class AGENT  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,11 +48,15 @@ public class AGENT extends _User{
     private String  telAgent ;
     @Column(name = "mail_agent" , nullable = false , length = 75)
     private String  mailAgent ;
+
+    @JoinColumn(name="id_user"   , nullable = false)
+    @ManyToOne
+    private User user ; 
    
 
     @OneToMany(mappedBy = "agent" , cascade = CascadeType.ALL)
     private List<PAIEMENT> paiementList ;
- 
+    
 
 
 

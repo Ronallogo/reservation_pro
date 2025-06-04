@@ -43,7 +43,7 @@ public class AgentMapperImpl implements AgentMapper{
         .telAgent(agent.getTelAgent())
         .dateNaiss(agent.getDateNaiss())
         .sexeAgent(agent.getSexeAgent())
-        .role(agent.getRole())
+      
         .build();
     }
 
@@ -78,9 +78,8 @@ public class AgentMapperImpl implements AgentMapper{
         .telAgent(dto.getTelAgent())
         .dateNaiss(dto.getDateNaiss())
         .sexeAgent(dto.getSexeAgent())
-        .login(dto.getLogin())
-        .password(this.passwordEncoder.encode(dto.getPassword()))
-        .role(dto.getRole())
+    
+        
         .build();
     }
 

@@ -23,15 +23,7 @@ public class ClientController {
     private ClientService clientService ;
 
 
-    @PostMapping(value = "/create"  ,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<?> create( @RequestBody CLIENT c){
-            var client = this.clientService.create(c);
-            return new ResponseEntity<>(client , HttpStatusCode.valueOf(200)) ;
-
-    }
+    
 
     @GetMapping(value = "/getAll")
     public ResponseEntity<?> getAll(){
@@ -63,11 +55,7 @@ public class ClientController {
         return new ResponseEntity<>(clients , HttpStatus.OK);
     }
 
-    @GetMapping(value = "/refresh")
-    public ResponseEntity<?> refresh(){
-        List<ClientDTO> clients = this.clientService.refreshClient();
-        return new ResponseEntity<>(clients , HttpStatus.OK);
-    }
+    
 
 
 

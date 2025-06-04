@@ -9,7 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import tg.voyage_pro.reservation_pro.security.user.Roles;
+import tg.voyage_pro.reservation_pro.Security.entities.Roles;
+ 
 
 
 @Setter

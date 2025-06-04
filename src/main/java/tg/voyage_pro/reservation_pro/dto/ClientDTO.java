@@ -4,7 +4,7 @@ package tg.voyage_pro.reservation_pro.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
  
 import lombok.*;
-import tg.voyage_pro.reservation_pro.security.user.Roles;
+import tg.voyage_pro.reservation_pro.Security.entities.Roles;
 
 import java.util.Date;
  

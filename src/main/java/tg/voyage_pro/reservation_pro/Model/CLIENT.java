@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import tg.voyage_pro.reservation_pro.security.token.TOKEN;
-import tg.voyage_pro.reservation_pro.security.user._User;
+import tg.voyage_pro.reservation_pro.Security.entities.User;
 
- 
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @ToString
-public class CLIENT extends _User {
+public class CLIENT  {
 
 
     @Id
@@ -46,13 +44,15 @@ public class CLIENT extends _User {
     private String telClient ;
     @Column(name="sexe_client" , nullable = false)
     private String sexeClient ;
-     
+    
+    @JoinColumn(name="id_user"   , nullable = false)
+    @ManyToOne
+    private User user ; 
 
     @OneToMany(mappedBy = "client" , cascade = CascadeType.ALL)
     private List<RESERVATION> reservations ;
 
-    @OneToMany(mappedBy = "client" , cascade = CascadeType.ALL)
-    private List<TOKEN> tokenList ;
+     
 
     
 

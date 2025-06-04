@@ -35,12 +35,7 @@ public class AgentController {
 
 
 
-
-    @PostMapping(value = "/create")
-    public ResponseEntity<?> create(@RequestBody  AgentDTO agent){
-        var response = this.agentService.create(agent);
-        return new ResponseEntity<>( response , HttpStatus.CREATED);
-    }
+ 
 
     @GetMapping(value = "/getAll")
     public ResponseEntity<?> all(){

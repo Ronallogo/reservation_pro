@@ -1,64 +1,39 @@
-package tg.voyage_pro.reservation_pro.security.token;
- 
+package tg.voyage_pro.reservation_pro.Security.Token;
 
-import java.util.Date;
-
- 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import tg.voyage_pro.reservation_pro.Model.AGENT;
-import tg.voyage_pro.reservation_pro.Model.CLIENT;
-import tg.voyage_pro.reservation_pro.security.user.Roles;
-import tg.voyage_pro.reservation_pro.security.user.TypeToken;
+import tg.voyage_pro.reservation_pro.Security.entities.User;
 
-@Getter
-@Setter
+import tg.voyage_pro.reservation_pro.Security.Token.*;
+@Data
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor  
 @Entity
-@Table(name = "token")
-public class TOKEN{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
-    private String token ;
-    private  TypeToken tokenType  = TypeToken.BEARER;
-    @Column(name = "expiration", nullable = false)
-    private Date expiration ;
-    @Column(name = "revoked", nullable = false)
-    private boolean revoked ;
-    @Column(name = "expired", nullable = false)
-    private boolean expired ;
- 
+public class Token {
 
-     // Référence soit Agent, soit Client
+    @Id
+    @GeneratedValue
+    public  Integer id ;
+
+    @Column(unique = true)
+    public String token ;
+
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Roles role; // CLIENT ou AGENT
+    public TypeToken tokenType = TypeToken.BEARER;
 
-    @ManyToOne
-    @JoinColumn(name = "agent", insertable = true, updatable = false , nullable = true)
-    private AGENT agent;
+    public  boolean revoked ;
 
-    @ManyToOne
-    @JoinColumn(name = "client", insertable = true, updatable = false , nullable = true)
-    private CLIENT client;
+    public boolean expired ;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    public User user;
+
 
 
 }
