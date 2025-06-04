@@ -30,15 +30,15 @@ public class SecurityController {
      
     @PostMapping("agent/auth")
     public  ResponseEntity<?>  authentificationAgent(@RequestBody AuthenticationRequest  request) {
-   
-        return  new ResponseEntity<>(  null ,  HttpStatusCode.valueOf(200));
+        var response = this.agentService.authentication(request);
+        return  new ResponseEntity<>(response  ,  HttpStatusCode.valueOf(200));
     }
 
     @PostMapping("agent/register")
     public  ResponseEntity<?>  createAgent(@RequestBody AgentDTO entity) {
 
-       // var response = this.agentService.create(entity);
-        return new ResponseEntity<>( null , HttpStatus.CREATED) ; 
+       var response = this.agentService.create(entity);
+        return new ResponseEntity<>( response , HttpStatus.CREATED) ; 
     }
     @PostMapping("client/register")
     public  ResponseEntity<?>  createClient(@RequestBody ClientDTO entity) {
@@ -50,8 +50,8 @@ public class SecurityController {
 
     @PostMapping("client/auth")
     public  ResponseEntity<?>  authentificationClient(@RequestBody AuthenticationRequest  request) {
-      //  var response = this.clientService.authenticate(request);
-        return  new ResponseEntity<>(null ,  HttpStatusCode.valueOf(200));
+        var response = this.clientService.authentication(request);
+        return  new ResponseEntity<>( response ,  HttpStatusCode.valueOf(200));
     }
 
      

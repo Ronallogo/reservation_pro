@@ -6,14 +6,16 @@
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+ 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-
-import tg.voyage_pro.reservation_pro.Model.CLIENT;
+import tg.voyage_pro.reservation_pro.Security.auth.AuthenticationRequest;
 import tg.voyage_pro.reservation_pro.Security.auth.AuthenticationResponse;
+import tg.voyage_pro.reservation_pro.Security.auth.AuthenticationService;
+import tg.voyage_pro.reservation_pro.Security.auth.RegisterRequest;
+import tg.voyage_pro.reservation_pro.Security.entities.Roles;
 import tg.voyage_pro.reservation_pro.database.ClientRepository;
 import tg.voyage_pro.reservation_pro.dto.ClientDTO;
 import tg.voyage_pro.reservation_pro.exceptions.ClientNotFoundException;
@@ -35,7 +37,7 @@ public class ClientService {
 
    
 
-    private final AuthenticationManager authenticationManager ; 
+    private final AuthenticationService auth ; 
 
 
 
@@ -45,13 +47,33 @@ public class ClientService {
 
 
     
-        
+    public AuthenticationResponse authentication(AuthenticationRequest request){
+        return this.auth.authenticate(request);
+    }
             
         
  
 
-    public  AuthenticationResponse create(ClientDTO request){
-        return null ; 
+    public  AuthenticationResponse create(ClientDTO  a){
+        var response = this.auth.register( RegisterRequest.builder()
+            .password(a.getPassword())
+            .role(Roles.CLIENT)
+            .username(a.getLogin())
+            .build()
+        ) ; 
+        
+    
+    var  client = this.clientMapper.toEntityForRegistration(a) ; 
+
+     client.setUser(response.getUser());
+    
+    this.cr.save(client);
+    return AuthenticationResponse.builder()
+        .accessToken(response.getAccessToken())
+        .refreshToken(response.getRefreshToken())
+        .build() ; 
+  
+
 
     
     }

@@ -15,7 +15,7 @@ import tg.voyage_pro.reservation_pro.Security.entities.Roles;
 public class RegisterRequest {
 
   
-    private String  uername ;
+    private String  username ;
     private String password ;
     private Roles role ;
 

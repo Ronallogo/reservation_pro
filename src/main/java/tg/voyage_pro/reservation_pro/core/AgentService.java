@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import tg.voyage_pro.reservation_pro.Model.AGENT;
 import tg.voyage_pro.reservation_pro.Security.auth.AuthenticationRequest;
 import tg.voyage_pro.reservation_pro.Security.auth.AuthenticationResponse;
+import tg.voyage_pro.reservation_pro.Security.auth.AuthenticationService;
+import tg.voyage_pro.reservation_pro.Security.auth.RegisterRequest;
 import tg.voyage_pro.reservation_pro.Security.entities.Roles;
 import tg.voyage_pro.reservation_pro.database.AgentRepository;
 import tg.voyage_pro.reservation_pro.dto.AgentDTO;
@@ -38,7 +40,7 @@ public class AgentService {
       
  
 
-    private final AuthenticationManager authenticationManager ; 
+    private final  AuthenticationService auth ; 
 
  
    
@@ -51,26 +53,36 @@ public class AgentService {
  
 
     public   AuthenticationResponse create(  AgentDTO a){
-         
-       /*  var agent = this.mapper.toEntityForRegistration(a) ; 
-        var saveAgent = this.repo.save(agent);
-        var jwtToken = jwtService.generateToken(agent) ; 
-        var refresh_token = jwtService.generateRefreshToken(agent) ; 
+        var response = this.auth.register(RegisterRequest.builder()
+            .password(a.getPassword())
+            .role(Roles.AGENT)
+            .username(a.getLogin())
+            .build()
+        ) ; 
+        var agent = this.mapper.toEntityForRegistration(a) ; 
 
-        saveAgentToken(saveAgent, jwtToken);
+        agent.setUser(response.getUser());
+        
+        this.repo.save(agent);
+        return AuthenticationResponse.builder()
+            .accessToken(response.getAccessToken())
+            .refreshToken(response.getRefreshToken())
+            .build() ; 
+      
 
-        return AuthentificationResponse.builder()
-            .accessToken(jwtToken)
-            .refreshToken(refre
-            sh_token)
-            .build() ; */
-        return null ; 
+      
+
+       
 
 
 
 
 
  
+    }
+
+    public AuthenticationResponse authentication(AuthenticationRequest request){
+        return this.auth.authenticate(request);
     }
 
     public List<AgentDTO>   all(){
@@ -103,22 +115,7 @@ public class AgentService {
 
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
-
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getUsername(),  request.getPassword())
-        ) ; 
-
-        var agent = this.repo.findByLogin(request.getUsername())
-            .orElseThrow(()-> new AgentNotFoundException( "agent not found")) ; 
-
-        return null ; 
-        
-
-        
- 
-
-    }
+  
 
     public void changeRole(String email , String role){
         var agent = this.repo.findByMailAgent(email).orElseThrow(()-> new AgentNotFoundException("Aucun agent n'a ce numéro"));
