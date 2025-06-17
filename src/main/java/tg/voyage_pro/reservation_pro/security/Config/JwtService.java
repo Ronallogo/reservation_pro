@@ -64,7 +64,7 @@ public class JwtService {
     private String buildToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails,
-            long expiration
+            long expiration   
     ) {
         System.out.print(userDetails.getAuthorities().stream().toList().get(0));
         Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
@@ -83,6 +83,7 @@ public class JwtService {
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
+        
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 

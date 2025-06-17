@@ -32,6 +32,8 @@ public class VOYAGE implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date dateVoyage ;
 
+    private Integer nbrPlaceDisponible ; 
+
     @OneToMany(mappedBy = "voyage" , cascade = CascadeType.ALL)
     private List<RESERVATION> reservations ; 
 

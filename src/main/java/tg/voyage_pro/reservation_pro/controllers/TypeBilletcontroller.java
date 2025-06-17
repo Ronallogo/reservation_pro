@@ -27,7 +27,7 @@ public class  TypeBilletcontroller {
     }
 
     @GetMapping(path = "/getAll")
-    public List<TYPE_BILLET> all(){
+    public List<TypeBilletDTO> all(){
         return this.service.all() ;  
     }
 

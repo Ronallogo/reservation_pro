@@ -24,8 +24,8 @@ public class TypeBilletService {
     }
 
 
-    public List<TYPE_BILLET> all(){
-        return  this.repo.findAll() ;
+    public List<TypeBilletDTO> all(){
+        return  this.mapper.toListDto( this.repo.findAll())  ;
         
         
     }

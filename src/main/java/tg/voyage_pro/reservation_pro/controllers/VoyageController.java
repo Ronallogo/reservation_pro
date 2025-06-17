@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import tg.voyage_pro.reservation_pro.Model.VOYAGE;
 import tg.voyage_pro.reservation_pro.core.VoyageService;
 import tg.voyage_pro.reservation_pro.dto.VoyageDTO;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -63,4 +65,11 @@ public class VoyageController {
         var v = this.vs.update(idVoyage ,  voyage);
         return new ResponseEntity<>(v , HttpStatus.OK);
     }
+
+
+    @GetMapping("/available")
+    public  List<VoyageDTO>  voyageDisponible() {
+        return this.vs.voyageDisponible() ; 
+    }
+    
 }

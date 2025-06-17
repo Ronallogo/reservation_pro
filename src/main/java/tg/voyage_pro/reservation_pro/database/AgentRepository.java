@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tg.voyage_pro.reservation_pro.Model.AGENT;
+import tg.voyage_pro.reservation_pro.Security.entities.User;
+
 
 
 @Repository
@@ -46,4 +48,8 @@ public interface AgentRepository extends JpaRepository<AGENT , Long> {
 
     @Query(value = "SELECT * FROM agent WHERE mail_agent = :mail ; "  , nativeQuery = true)
     Optional<AGENT> findByMailAgent(@Param("mail") String mailAgent) ;
+
+
+    @Query(value= "SELECT * FROM  agent WHERE id_user = :id ; " , nativeQuery = true)
+    Optional<AGENT>   findByUserId(@Param("id") Long id);
 }

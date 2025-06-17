@@ -4,7 +4,7 @@ package tg.voyage_pro.reservation_pro.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
- 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Entity
 @Setter
-@SuperBuilder
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -29,7 +29,7 @@ import java.util.List;
         name = "unique_email", 
         columnNames = {"mailAgent"}
     ))
-public class AGENT  {
+public class AGENT   extends ACTOR{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

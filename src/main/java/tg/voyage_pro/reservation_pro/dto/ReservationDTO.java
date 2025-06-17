@@ -4,6 +4,7 @@ import java.sql.Date;
 
  
 import lombok.*;
+import tg.voyage_pro.reservation_pro.Model.STATUS;
  
 
 @Getter
@@ -17,10 +18,17 @@ public class ReservationDTO {
     private Long idClient ; 
     private Long idVoyage ; 
     private Long idTypeBillet ; 
-    private Long libelleTypeBillet ; 
+    private  String libelleTypeBillet ; 
     private String libelleVoyage; 
     private String nomClient ; 
     private String prenomClient ; 
+    private  String depart ; 
+    private String arrivee ; 
+    private   Float montant ; 
     private String mailClient ; 
     private Date dateReservation ; 
+    private Integer nbrPlace ; 
+
+
+    private STATUS status ; 
 }

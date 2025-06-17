@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +31,7 @@ import lombok.ToString;
 @Table(name = "reservation")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor   
 @AllArgsConstructor
 @Builder
 @ToString
@@ -54,6 +55,9 @@ public class RESERVATION implements Serializable{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date dateReservation ; 
 
+    @Column(name = "montant" , nullable = false)
+    private   Float  montant ; 
+
     @ManyToOne
     @JoinColumn(name = "type_billet_id" )
     private TYPE_BILLET typeBillet ;
@@ -61,7 +65,7 @@ public class RESERVATION implements Serializable{
     @Enumerated(EnumType.STRING)
     @Column(name = "status" , nullable = false)
     private STATUS status ;
-
+    @OneToMany
     private List<PAIEMENT> paiementList ;
 
 

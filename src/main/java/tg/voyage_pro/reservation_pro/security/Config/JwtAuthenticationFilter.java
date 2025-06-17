@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
             //// check if the request contains this path :  "/api/v1/auth"
 
-            if(request.getServletPath().contains("/api/auth")){
+            if(request.getServletPath().contains("/tg/voyage_pro/reservation/")){
                 filterChain.doFilter(request , response);
                 return;
             }

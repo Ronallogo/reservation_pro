@@ -21,8 +21,10 @@ import tg.voyage_pro.reservation_pro.Security.auth.AuthenticationResponse;
 import tg.voyage_pro.reservation_pro.Security.auth.AuthenticationService;
 import tg.voyage_pro.reservation_pro.Security.auth.RegisterRequest;
 import tg.voyage_pro.reservation_pro.Security.entities.Roles;
+import tg.voyage_pro.reservation_pro.Security.entities.UserRepository;
 import tg.voyage_pro.reservation_pro.database.AgentRepository;
 import tg.voyage_pro.reservation_pro.dto.AgentDTO;
+import tg.voyage_pro.reservation_pro.dto.UserDTO_2;
 import tg.voyage_pro.reservation_pro.exceptions.AgentNotFoundException;
 import tg.voyage_pro.reservation_pro.mapperImpl.AgentMapperImpl;
  
@@ -42,28 +44,25 @@ public class AgentService {
 
     private final  AuthenticationService auth ; 
 
- 
-   
+    private final UserRepository repoUser ; 
 
-
-   
     private final AgentRepository repo ;
    
     private  final AgentMapperImpl mapper   ; 
  
 
     public   AuthenticationResponse create(  AgentDTO a){
-        var response = this.auth.register(RegisterRequest.builder()
-            .password(a.getPassword())
-            .role(Roles.AGENT)
-            .username(a.getLogin())
-            .build()
-        ) ; 
         var agent = this.mapper.toEntityForRegistration(a) ; 
 
-        agent.setUser(response.getUser());
-        
-        this.repo.save(agent);
+        var response = this.auth.register(RegisterRequest.builder()
+            .password(a.getPassword())
+            .role(Roles.AGENT)  
+            .username(a.getLogin())
+            .build() , agent
+        ) ; 
+      
+
+      
         return AuthenticationResponse.builder()
             .accessToken(response.getAccessToken())
             .refreshToken(response.getRefreshToken())
@@ -94,9 +93,26 @@ public class AgentService {
             agent.getNomAgent(), agent.getMailAgent(),
             agent.getDateNaiss().toString(),
             agent.getSexeAgent(),
-             agent.getTelAgent()));
+            agent.getTelAgent()));
     }
 
+    public AuthenticationResponse updateUser(UserDTO_2 data , String email){
+        var agent = this.repo.findByMailAgent(email)
+        .orElseThrow(()-> new AgentNotFoundException( "agent not found")) ; 
+        agent.setMailAgent(data.getEmail());
+        agent.setTelAgent(data.getPhone());
+        agent.setNomAgent(data.getLastname());
+        agent.setPrenomAgent(data.getFirstname());
+
+        this.repo.save(agent) ; 
+
+        return  this.auth.update( RegisterRequest.builder()
+            .password(agent.getUser().getPassword())
+            .role(agent.getUser().getRole())
+            .username(agent.getUser().getUsername())
+            .build()
+        );   
+    }
 
     public  AgentDTO update(Long id ,  AgentDTO agent){
         if(id == null){
@@ -134,11 +150,11 @@ public class AgentService {
 
 
     public boolean delete(Long id){
-        if(this.repo.existsById(id)){
-                this.repo.deleteById(id) ;
-                return true ;
-        }
-        return  false ;
+
+        AGENT agent = this.repo.findById(id).orElse(null) ; 
+        if(agent == null) return false ; 
+        this.repoUser.delete(agent.getUser()); 
+        return   true ;
     }
     public AGENT get(Long id){
         return this.repo.findById(id).orElse(null);

@@ -21,7 +21,10 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Entity
-@Table(name = "_user")
+@Table(name = "_user" , uniqueConstraints = @UniqueConstraint(
+    name = "unique_username", 
+    columnNames = {"username"}
+))
 
 public class User implements UserDetails {
 

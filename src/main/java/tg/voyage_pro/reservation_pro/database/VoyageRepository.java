@@ -18,4 +18,14 @@ public interface VoyageRepository extends JpaRepository<VOYAGE , Long> {
 
 
 
+    @Query(value = """
+        SELECT * FROM voyage WHERE nbr_place_disponible > 0 AND date_voyage > CURRENT_DATE
+    """  , nativeQuery = true)
+    List<VOYAGE> voyageDisponible();
+
+
+
 }
+
+
+

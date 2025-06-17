@@ -42,6 +42,9 @@ public class SecurityConfiguration {
         "/tg/voyage_pro/reservation/agent/auth",
         "/tg/voyage_pro/reservation/client/register",
         "/tg/voyage_pro/reservation/client/auth",
+        "/tg/voyage_pro/reservation/**",
+        "/tg/voyage_pro/reservation/auth/paiement/**"
+       
         
 
 
@@ -70,6 +73,7 @@ public class SecurityConfiguration {
         .requestMatchers("/tg/voyage_pro/reservation/auth/agent/update").hasAnyRole("ADMIN","AGENT")
         .requestMatchers("/tg/voyage_pro/reservation/auth/agent/delete").hasAnyRole("ADMIN")
         .requestMatchers("/tg/voyage_pro/reservation/auth/client/getAll").hasAnyRole("ADMIN")
+        .requestMatchers("http://localhost:8081/tg/voyage_pro/reservation/user/update").hasAnyRole("AGENT" , "ADMIN")
          
 
         .anyRequest().authenticated()

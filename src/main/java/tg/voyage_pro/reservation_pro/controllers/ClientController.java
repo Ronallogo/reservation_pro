@@ -3,12 +3,11 @@ package tg.voyage_pro.reservation_pro.controllers;
  
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
+ 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import tg.voyage_pro.reservation_pro.Model.CLIENT;
+ 
 import tg.voyage_pro.reservation_pro.core.ClientService;
 import tg.voyage_pro.reservation_pro.dto.ClientDTO;
 
@@ -54,6 +53,8 @@ public class ClientController {
         List<ClientDTO> clients = this.clientService.searchClient(client);
         return new ResponseEntity<>(clients , HttpStatus.OK);
     }
+
+  
 
     
 

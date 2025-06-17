@@ -67,5 +67,14 @@ public interface ClientRepository extends JpaRepository<CLIENT , Long> {
     ") ORDER BY c.id_client DESC", nativeQuery = true)
 
      */
+
+
+    @Query(value= "SELECT * FROM   client WHERE id_user = :id ; " , nativeQuery = true)
+    Optional<CLIENT>   findByUserId(@Param("id") Long id);
+
+    @Query(value =  """
+        SELECT * FROM  client WHERE mail_client = :email ;  
+    """ , nativeQuery =  true)
+    Optional<CLIENT> findByMailClient(String email);
     
 }

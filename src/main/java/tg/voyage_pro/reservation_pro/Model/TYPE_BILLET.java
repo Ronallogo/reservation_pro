@@ -25,7 +25,7 @@ public class TYPE_BILLET implements Serializable{
     @Column(name = "libelle_type_billet" , nullable = false)
     private String libelleTypeBillet ; 
     @Column(name = "prix_type_billet" , nullable = false)
-    private Double prixTypeBillet ; 
+    private  Float prixTypeBillet ; 
     @OneToMany(mappedBy = "typeBillet"   ,  cascade=CascadeType.ALL)
     private List<RESERVATION> reservations ; 
 

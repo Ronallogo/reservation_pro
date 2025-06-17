@@ -19,7 +19,7 @@ public class Token {
     @GeneratedValue
     public  Integer id ;
 
-    @Column(unique = true)
+    @Column(unique = true , length = 500)
     public String token ;
 
 

@@ -22,9 +22,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 @ToString
-public class CLIENT  {
+public class CLIENT extends ACTOR {
 
 
     @Id

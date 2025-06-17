@@ -10,5 +10,5 @@ import lombok.*;
 public class TypeBilletDTO {
     private Long idTypeBillet ; 
     private String libelleTypeBillet ; 
-    private Double prixTypeBillet ; 
+    private  Float prixTypeBillet ; 
 }

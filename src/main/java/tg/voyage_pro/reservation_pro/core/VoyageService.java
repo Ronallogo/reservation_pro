@@ -1,9 +1,8 @@
 package tg.voyage_pro.reservation_pro.core;
 
 import java.util.List;
- 
- 
- 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +74,13 @@ public class VoyageService {
 
     public  VOYAGE get(Long idVoyage){
         return this.vr.findById(idVoyage).orElse(null);
+
+    }
+
+
+
+    public List<VoyageDTO> voyageDisponible(){
+        return  this.mapper.toDtos(this.vr.voyageDisponible())  ;
 
     }
 }

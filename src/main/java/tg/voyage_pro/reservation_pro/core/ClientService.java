@@ -18,6 +18,7 @@ import tg.voyage_pro.reservation_pro.Security.auth.RegisterRequest;
 import tg.voyage_pro.reservation_pro.Security.entities.Roles;
 import tg.voyage_pro.reservation_pro.database.ClientRepository;
 import tg.voyage_pro.reservation_pro.dto.ClientDTO;
+import tg.voyage_pro.reservation_pro.dto.UserDTO_2;
 import tg.voyage_pro.reservation_pro.exceptions.ClientNotFoundException;
 import tg.voyage_pro.reservation_pro.mapperImpl.ClientMapperImpl;
  
@@ -33,7 +34,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClientService {
     @Autowired
-    private   ClientRepository cr ;
+    private   ClientRepository repo ;
 
    
 
@@ -50,24 +51,43 @@ public class ClientService {
     public AuthenticationResponse authentication(AuthenticationRequest request){
         return this.auth.authenticate(request);
     }
+
+    public  AuthenticationResponse updateUser(UserDTO_2 data , String email){
+        var client = this.repo.findByMailClient(email)
+        .orElseThrow(()-> new ClientNotFoundException( "client not found")) ; 
+        client.setMailClient(data.getEmail());
+        client.setTelClient(data.getPhone());
+        client.setNomClient(data.getLastname());
+        client.setPrenomClient(data.getFirstname());
+
+        this.repo.save(client) ; 
+
+        return  this.auth.update( RegisterRequest.builder()
+            .password(client.getUser().getPassword())
+            .role(Roles.CLIENT)
+            .username(client.getUser().getUsername())
+            .build()
+        );   
+
+    }
             
         
  
 
-    public  AuthenticationResponse create(ClientDTO  a){
+    public  AuthenticationResponse  register(ClientDTO  a){
+        var  client = this.clientMapper.toEntityForRegistration(a) ; 
+
+
         var response = this.auth.register( RegisterRequest.builder()
             .password(a.getPassword())
             .role(Roles.CLIENT)
             .username(a.getLogin())
-            .build()
+            .build() , client
+            
         ) ; 
         
-    
-    var  client = this.clientMapper.toEntityForRegistration(a) ; 
 
-     client.setUser(response.getUser());
     
-    this.cr.save(client);
     return AuthenticationResponse.builder()
         .accessToken(response.getAccessToken())
         .refreshToken(response.getRefreshToken())
@@ -80,7 +100,7 @@ public class ClientService {
 
 
     public List<ClientDTO> getAllClient(){
-        return   this.clientMapper.toListDtos(this.cr.findAllOrderByIdClientDesc())   ;
+        return   this.clientMapper.toListDtos(this.repo.findAllOrderByIdClientDesc())   ;
         
     }
 
@@ -89,7 +109,7 @@ public class ClientService {
 
     public  ClientDTO getClient(Long idClient){
     
-        var client = this.cr.findById(idClient).orElseThrow(()-> new ClientNotFoundException("client not found"));
+        var client = this.repo.findById(idClient).orElseThrow(()-> new ClientNotFoundException("client not found"));
         if(client == null){
             return null ;
         }
@@ -104,8 +124,8 @@ public class ClientService {
     }
 
     public boolean delete(Long idClient){
-        if(this.cr.existsById(idClient)){
-            this.cr.deleteById(idClient); ;
+        if(this.repo.existsById(idClient)){
+            this.repo.deleteById(idClient); ;
             return true ;
         }
         return false ;
@@ -114,7 +134,7 @@ public class ClientService {
 
     public List<ClientDTO> searchClient(ClientDTO client){
         
-        return this.clientMapper.toListDtos(this.cr.searchClient(
+        return this.clientMapper.toListDtos(this.repo.searchClient(
             client.getNomClient(),
             client.getMailClient(),
             client.getDateNaiss().toString(),
