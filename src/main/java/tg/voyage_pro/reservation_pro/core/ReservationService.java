@@ -1,12 +1,14 @@
 package tg.voyage_pro.reservation_pro.core;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
  
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
- 
+import org.yaml.snakeyaml.util.Tuple;
+
 import tg.voyage_pro.reservation_pro.Model.CLIENT;
 import tg.voyage_pro.reservation_pro.Model.RESERVATION;
 import tg.voyage_pro.reservation_pro.Model.STATUS;
@@ -14,6 +16,7 @@ import tg.voyage_pro.reservation_pro.Model.TYPE_BILLET;
 import tg.voyage_pro.reservation_pro.Model.VOYAGE;
 import tg.voyage_pro.reservation_pro.database.*;
 import tg.voyage_pro.reservation_pro.dto.ReservationDTO;
+import tg.voyage_pro.reservation_pro.dto.StatReservationObject_1;
 import tg.voyage_pro.reservation_pro.exceptions.ClientNotFoundException;
 import tg.voyage_pro.reservation_pro.exceptions.NullValueException;
 import tg.voyage_pro.reservation_pro.exceptions.ReservationNotFoundException;
@@ -32,6 +35,11 @@ public class ReservationService {
 
     @Autowired
     private VoyageRepository repoVoyage ; 
+
+    @Autowired 
+    private AgentRepository repoAgent ; 
+
+ 
 
     @Autowired
     private TypeBilletRepository repoTypeBillet;
@@ -98,16 +106,13 @@ public class ReservationService {
         return true ; 
     }
 
-
-    
-    
     public List<ReservationDTO> getAll(){
         return this.repoReservation.findAll().stream().map( r->
                 ReservationDTO.builder()
                 .idClient(r.getClient().getIdClient())
                 .idVoyage(r.getVoyage().getIdVoyage())
                 .idReservation(r.getIdReservation())
-                .nomClient( r.getClient().getNomClient())
+                .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
                 .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
                 .depart(r.getVoyage().getDepartVoyage())
                 .arrivee(r.getVoyage().getArriveVoyage())
@@ -121,13 +126,16 @@ public class ReservationService {
                 .build()
         ).collect(Collectors.toList());
     }
+    
     public List<ReservationDTO> getAllForOne(String email){
         return this.repoReservation.findAllForOne(email).stream().map( r->
+                 
                 ReservationDTO.builder()
                 .idClient(r.getClient().getIdClient())
                 .idVoyage(r.getVoyage().getIdVoyage())
+                .mailAgentAssocie(r.getMailAgentAssocie() )
                 .idReservation(r.getIdReservation())
-                .nomClient( r.getClient().getNomClient())
+                 .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
                 .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
                 .depart(r.getVoyage().getDepartVoyage())
                 .arrivee(r.getVoyage().getArriveVoyage())
@@ -149,7 +157,7 @@ public class ReservationService {
             .idClient(r.getClient().getIdClient())
             .idVoyage(r.getVoyage().getIdVoyage())
             .idReservation(r.getIdReservation())
-            .nomClient( r.getClient().getNomClient())
+            .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
             .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
             .depart(r.getVoyage().getDepartVoyage())
             .arrivee(r.getVoyage().getArriveVoyage())
@@ -201,13 +209,17 @@ public class ReservationService {
     }
 
     public Integer nbrReservationRecente(){
-        return  this.repoReservation.reservations() ;  
+        return  this.repoReservation.reservations().intValue()  ;  
     }
 
-    public String confirmer(Long idReservation ){
+    public String confirmer(Long idReservation , String emailAgent ){
         var reservation = this.repoReservation.findById(idReservation).orElseThrow(()-> new ReservationNotFoundException("reservation not found") ) ;
-        
+        var agent = this.repoAgent.findByMailAgent(emailAgent).orElseThrow(()-> new RuntimeException("Agent not found")) ; 
         reservation = StatusMediator.builder().build().Confirmer(reservation) ; 
+
+        reservation.setMailAgentAssocie(agent.getMailAgent());
+
+
 
         this.repoReservation.save(reservation) ; 
 
@@ -229,15 +241,19 @@ public class ReservationService {
         var reservation = this.repoReservation.findById(idReservation).orElseThrow(()-> new ReservationNotFoundException("reservation not found") ) ;
         
         reservation = StatusMediator.builder().build().Annulee(reservation) ; 
+        var voyage = this.repoVoyage.findById(reservation.getVoyage().getIdVoyage())
+            .orElseThrow(()-> new RuntimeException( "Voyage nto found"));
+        
+        
+        voyage.setNbrPlaceDisponible(reservation.getNbrPlace() + voyage.getNbrPlaceDisponible());
+        this.repoVoyage.save(voyage) ; 
 
         this.repoReservation.save(reservation) ; 
 
         return "Operation réussie" ; 
     }
 
-
-
-    public List<ReservationDTO> research(ReservationDTO res){
+    public List<ReservationDTO> researchForOne(ReservationDTO res){
 
         return this.repoReservation.researchForOne(
             res.getMailClient() , 
@@ -248,8 +264,9 @@ public class ReservationService {
                 ReservationDTO.builder()
                 .idClient(r.getClient().getIdClient())
                 .idVoyage(r.getVoyage().getIdVoyage())
+                  .mailAgentAssocie(r.getMailAgentAssocie())
                 .idReservation(r.getIdReservation())
-                .nomClient( r.getClient().getNomClient())
+               .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
                 .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
                 .depart(r.getVoyage().getDepartVoyage())
                 .arrivee(r.getVoyage().getArriveVoyage())
@@ -268,6 +285,322 @@ public class ReservationService {
            
 
     }
+    
+    
+    public List<ReservationDTO> researchForOneAnnulee(ReservationDTO res){
+
+        return this.repoReservation.researchForOneAnnulee(
+            res.getMailClient() , 
+            res.getDepart(),
+            res.getArrivee(), 
+            res.getDateReservation().toString()
+        ).stream().map(r ->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                  .mailAgentAssocie(r.getMailAgentAssocie())
+                .idReservation(r.getIdReservation())
+               .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        
+        ).collect(Collectors.toList());
+
+         
+           
+
+    }
+    
+    
+    public List<ReservationDTO> researchForOneEncours(ReservationDTO res){
+
+        return this.repoReservation.researchForOneEnCours(
+            res.getMailClient() , 
+            res.getDepart(),
+            res.getArrivee(), 
+            res.getDateReservation().toString()
+        ).stream().map(r ->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                  .mailAgentAssocie(r.getMailAgentAssocie())
+                .idReservation(r.getIdReservation())
+               .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        
+        ).collect(Collectors.toList());
+
+         
+           
+
+    }
+    
+    public List<ReservationDTO> research(ReservationDTO res){
+
+        return this.repoReservation.research(
+           
+            res.getDepart(),
+            res.getArrivee(), 
+            res.getDateReservation().toString()
+        ).stream().map(r ->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                  .mailAgentAssocie(r.getMailAgentAssocie())
+                .idReservation(r.getIdReservation())
+               .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        
+        ).collect(Collectors.toList());
+
+         
+           
+
+    }
+    public List<ReservationDTO> researchAnnulee(ReservationDTO res){
+
+        return this.repoReservation.researchAnnulee(
+           
+            res.getDepart(),
+            res.getArrivee(), 
+            res.getDateReservation().toString()
+        ).stream().map(r ->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                  .mailAgentAssocie(r.getMailAgentAssocie())
+                .idReservation(r.getIdReservation())
+               .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        
+        ).collect(Collectors.toList());
+
+         
+           
+
+    }
+    public List<ReservationDTO> researchEncour(ReservationDTO res){
+
+        return this.repoReservation.researchEncours(
+           
+            res.getDepart(),
+            res.getArrivee(), 
+            res.getDateReservation().toString()
+        ).stream().map(r ->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                  .mailAgentAssocie(r.getMailAgentAssocie())
+                .idReservation(r.getIdReservation())
+               .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        
+        ).collect(Collectors.toList());
+
+         
+           
+
+    }
+
+    public Float reservationsRecent(){
+        Float nbrTotalReservation = this.repoReservation.countReservation() ; 
+
+        List<Float> reservationRecent = this.repoReservation.newReservations() ; 
+
+        System.out.print(reservationRecent);
+        System.out.println(nbrTotalReservation);
+         
+
+        return 100 - ((reservationRecent.size() * 100) / nbrTotalReservation) ; 
+    }
+
+    public Float reservationParclient(){
+        return this.repoReservation.averageParClient() ; 
+    }
+
+    public List<ReservationDTO> getReservationsAnnulee(){
+            return this.repoReservation.reservationAnnulee().stream().map( r->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                .mailAgentAssocie(r.getMailAgentAssocie())
+                .idReservation(r.getIdReservation())
+          .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        ).collect(Collectors.toList());
+    }
+
+    public List<ReservationDTO> getReservationsAnnuleeForOne(String email){
+            return this.repoReservation.reservationAnnuleeForOne(email).stream().map( r->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                .mailAgentAssocie(r.getMailAgentAssocie())
+                .idReservation(r.getIdReservation())
+                 .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        ).collect(Collectors.toList());
+    }
+
+    public List<ReservationDTO> getReservationsEnCoursForOne(String email){
+            return this.repoReservation.reservationEnCoursForOne(email).stream().map( r->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                  .mailAgentAssocie(r.getMailAgentAssocie())
+                .idReservation(r.getIdReservation())
+                .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        ).collect(Collectors.toList());
+    }
+    public List<ReservationDTO> getReservationsEnCours( ){
+            return this.repoReservation.reservationEncours().stream().map( r->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                .idReservation(r.getIdReservation())
+                .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailClient(r.getClient().getMailClient())
+                .mailAgentAssocie(r.getMailAgentAssocie())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        ).collect(Collectors.toList());
+    }
+
+    public List<ReservationDTO> getReservationsForOne(String email){
+            return this.repoReservation.reservationEffectuerForOne(email).stream().map( r->
+                ReservationDTO.builder()
+                .idClient(r.getClient().getIdClient())
+                .idVoyage(r.getVoyage().getIdVoyage())
+                .idReservation(r.getIdReservation())
+                .mailAgentAssocie(r.getMailAgentAssocie())
+                
+                .nomClient( r.getClient().getNomClient() + " "+  r.getClient().getPrenomClient()  )
+                .libelleVoyage(r.getVoyage().getDepartVoyage() +" - "+ r.getVoyage().getArriveVoyage())
+                .depart(r.getVoyage().getDepartVoyage())
+                .arrivee(r.getVoyage().getArriveVoyage())
+                .mailAgentAssocie(r.getMailAgentAssocie())
+                .mailClient(r.getClient().getMailClient())
+                .dateReservation(r.getDateReservation()) 
+                .idTypeBillet(r.getTypeBillet().getIdTypeBillet())
+                .libelleTypeBillet(r.getTypeBillet().getLibelleTypeBillet())
+                .status(r.getStatus())
+                .nbrPlace(r.getNbrPlace())
+                .montant(r.getMontant())
+                .build()
+        ).collect(Collectors.toList());
+    }
+
+    public StatReservationObject_1 data(Integer mois){
+        Map<String , Object> result =  this.repoReservation.getDataDashBoard1(mois) ; 
+        return StatReservationObject_1.builder()
+        .gainMoyen((Double) result.get("gainMoyen"))
+        .revenuTotal(( Double) result.get("revenuTotal"))
+        .build() ; 
+
+
+    }
+
+
+    public   Map<String , Object> newEarnPourcentage(){
+         return this.repoReservation.newEarnPourcentage() ;
+         
+         
+    }
+
+    public Map<String  , Object> TotalEarn(){
+            return this.repoReservation.gainTotal() ; 
+    }
+
+    
+ 
 
 
     

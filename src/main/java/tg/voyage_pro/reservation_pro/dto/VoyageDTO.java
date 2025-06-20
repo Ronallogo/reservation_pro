@@ -17,6 +17,7 @@ public class VoyageDTO {
     private Long idVoyage ;
     private String  departVoyage ;
     private String arriveVoyage ;
+    private Integer nbrPlaceDisponible ; 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC")
     private Date dateVoyage ;
 }

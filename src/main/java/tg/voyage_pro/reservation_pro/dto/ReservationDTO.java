@@ -28,6 +28,7 @@ public class ReservationDTO {
     private String mailClient ; 
     private Date dateReservation ; 
     private Integer nbrPlace ; 
+     private String mailAgentAssocie ; 
 
 
     private STATUS status ; 

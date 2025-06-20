@@ -36,7 +36,7 @@ public class StatusMediator {
 
         switch (r.getStatus().name()) {
             case  "EN_ATTENTE_PAIEMENT":
-                return    AttenteConfirmation.builder().build().MAKE_PAID(r) ; 
+                return    AttentePaiement.builder().build().MAKE_PAID(r) ; 
             case "EN_ATTENTE_CONFIRMATION" :
                 return AttenteConfirmation.builder().build().MAKE_PAID(r);
 

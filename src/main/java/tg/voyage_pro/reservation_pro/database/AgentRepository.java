@@ -46,10 +46,14 @@ public interface AgentRepository extends JpaRepository<AGENT , Long> {
     Optional<AGENT> findByLogin(@Param("login") String login);
 
 
-    @Query(value = "SELECT * FROM agent WHERE mail_agent = :mail ; "  , nativeQuery = true)
-    Optional<AGENT> findByMailAgent(@Param("mail") String mailAgent) ;
+    @Query(value = "SELECT * FROM agent a WHERE a.mail_agent = :mailAgent  "  , nativeQuery = true)
+    Optional<AGENT> findByMailAgent(@Param("mailAgent") String mailAgent) ;
 
 
     @Query(value= "SELECT * FROM  agent WHERE id_user = :id ; " , nativeQuery = true)
     Optional<AGENT>   findByUserId(@Param("id") Long id);
+
+
+    @Query(value="SELECT *FROM agent ORDER BY id_agent DESC" , nativeQuery = true)
+    List<AGENT> findAllDesc();
 }

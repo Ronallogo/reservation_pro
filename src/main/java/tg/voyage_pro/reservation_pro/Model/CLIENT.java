@@ -22,9 +22,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
-public class CLIENT extends ACTOR {
+public class CLIENT  {
 
 
     @Id
@@ -44,15 +44,15 @@ public class CLIENT extends ACTOR {
     private String telClient ;
     @Column(name="sexe_client" , nullable = false)
     private String sexeClient ;
-    
+     
+
+    @OneToMany(mappedBy = "client" , cascade = CascadeType.ALL)
+    private List<RESERVATION> reservations ;
     @JoinColumn(name="id_user"   , nullable = false)
     @ManyToOne
     private User user ; 
 
-    @OneToMany(mappedBy = "client" , cascade = CascadeType.ALL)
-    private List<RESERVATION> reservations ;
-
-     
+   
 
     
 

@@ -1,9 +1,12 @@
 package tg.voyage_pro.reservation_pro.core;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+ 
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -55,12 +58,17 @@ public class VoyageService {
         v.setDateVoyage(voyage.getDateVoyage());
         v.setDepartVoyage(voyage.getDepartVoyage());
         v.setArriveVoyage(voyage.getArriveVoyage());
+        v.setNbrPlaceDisponible(v.getNbrPlaceDisponible());
         v.setIdVoyage(idVoyage);
         return this.mapper.toDto(this.vr.save(v)) ; 
         
 
         
  
+    }
+
+    public List<VoyageDTO> recent(){
+        return this.mapper.toDtos( this.vr.voyageRecent());
     }
 
     public boolean delete(Long idVoyage){
@@ -83,4 +91,54 @@ public class VoyageService {
         return  this.mapper.toDtos(this.vr.voyageDisponible())  ;
 
     }
+
+    public List<VoyageDTO> researchForClient(Date dateVoyage , String departVoyage , String arriveVoyage){
+        return this.mapper.toDtos(this.vr.researchListForClient(departVoyage, arriveVoyage, dateVoyage.toString())) ; 
+    }
+
+
+    public List<VoyageDTO> researchForAgent(Date dateVoyage , String departVoyage , String arriveVoyage){
+        return this.mapper.toDtos(this.vr.researchListForAgent(departVoyage, arriveVoyage, dateVoyage.toString())) ; 
+    }
+
+    public Float recentVoyageAverage(){
+        List<VOYAGE> voyage = this.vr.voyageRecent() ;
+
+        Float nbrTotal = this.vr.nbrTotal() ; 
+        return 100 - (( voyage.size() * 100) /  nbrTotal) ; 
+        
+        
+    }
+
+    public Integer volReserver(){
+        return this.vr.CountOneByOneVolReserver().stream()
+        .mapToInt(Integer::intValue)
+        .sum();
+    }
+
+    public List<String> AllDepart(){
+        return this.vr.Alldepart() ;
+    }
+
+
+    public List<String> AllArrive(){
+        return this.vr.AllArrivee() ; 
+    }
+
+
+    public List<String>AllDepartDisponible(){
+        return this.vr.AllDepartDisponible() ; 
+    }
+
+    public List<String>AllArriveeDisponible(){
+        return this.vr.AllArriveeDisponible() ; 
+
+    }
+
+    public List<Map<String , Object>> voyageTop3(){
+            return  this.vr.voyageTop3() ; 
+    }
+    
+  
+
 }

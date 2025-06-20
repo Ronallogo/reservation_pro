@@ -1,10 +1,13 @@
 package tg.voyage_pro.reservation_pro.controllers;
 
 import java.net.http.HttpClient;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -57,19 +60,21 @@ public class ReservationController {
         return this.service.delete(id);
     }
 
-    @PutMapping(path="/confirmation/{id}")
-    public ResponseEntity<?> confirmation(@PathVariable Long id){
-        var response = this.service.confirmer(id);
-        return new ResponseEntity<>(response , HttpStatus.OK);
+    @GetMapping(path="/confirmation/{emailAgent}/{id}")
+    public ResponseEntity<?> confirmation(@PathVariable Long id ,   @PathVariable String emailAgent){
+        var response = this.service.confirmer(id , emailAgent);
+        Map<String , Object> o = new HashMap<>() ; 
+        o.put("value" , response) ; 
+        return new ResponseEntity<>( o , HttpStatus.OK);
     }
 
-    @PutMapping(path="/annulation/{id}")
+    @GetMapping(path="/annulation/{id}")
     public ResponseEntity<?> annulation(@PathVariable Long id){
-        var response = this.service.annulee(id);
-        return new ResponseEntity<>(response , HttpStatus.OK);
+        this.service.annulee(id);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
-    @PutMapping(path="/payment/{id}")
+    @GetMapping(path="/payment/{id}")
     public ResponseEntity<?> payment(@PathVariable Long id){
         var response = this.service.payee(id);
         return new ResponseEntity<>(response , HttpStatus.OK);
@@ -77,8 +82,89 @@ public class ReservationController {
 
     @PutMapping(value="/researchForOne")
     public List<ReservationDTO> researchForOne(@RequestBody ReservationDTO res){
-        return this.service.research(res) ; 
+        return this.service.researchForOne(res) ; 
     }
+    @PutMapping(value="/researchForOneAnnulee")
+    public List<ReservationDTO> researchForOneAnnulee(@RequestBody ReservationDTO res){
+        return this.service.researchForOneAnnulee(res) ; 
+    }
+    @PutMapping(value="/researchForOneEncours")
+    public List<ReservationDTO> researchForOneEncours(@RequestBody ReservationDTO res){
+        return this.service.researchForOneEncours(res) ; 
+    }
+    @PutMapping(value="/research")
+    public List<ReservationDTO> research(@RequestBody ReservationDTO res){
+        return this.service.researchForOne(res) ; 
+    }
+    @PutMapping(value="/researchAnnulee")
+    public List<ReservationDTO> researchAnnulee(@RequestBody ReservationDTO res){
+        return this.service.researchAnnulee(res) ; 
+    }
+    @PutMapping(value="/researchEnCours")
+    public List<ReservationDTO> researchEnCours(@RequestBody ReservationDTO res){
+        return this.service.researchEncour(res) ; 
+    }
+
+    @GetMapping(value="/reservationRecentePourcentage")
+    public  ResponseEntity<?> reservationsRecenteFloat(){
+        var response = this.service.reservationsRecent() ; 
+        Map<String , Object> o = new HashMap<>() ; 
+        o.put( "reservation_average", response) ; 
+
+        return new ResponseEntity<>(o , HttpStatus.OK) ; 
+
+    }
+
+    @GetMapping(value="/reservationParClient" )
+    public ResponseEntity<?> reservationParClient(){
+        var response = this.service.reservationParclient() ; 
+        Map<String  ,Object> o = new HashMap<>()  ; 
+        o.put("value" , response) ; 
+
+        return new  ResponseEntity<>(o , HttpStatus.OK) ; 
+    }
+
+
+    @GetMapping(value="/reservationEnCoursForOne/{email}")
+    public List<ReservationDTO> reservationEnCoursForOne(@PathVariable String email){
+        return this.service.getReservationsEnCoursForOne(email) ; 
+
+    }
+    @GetMapping(value="/reservationEnCours")
+    public List<ReservationDTO> reservationEnCours(){
+        return this.service.getReservationsEnCours() ; 
+
+    }
+
+    @GetMapping(value="/reservationAnnulee")
+    public List<ReservationDTO> reservationAnnuler(){
+        return this.service.getReservationsAnnulee() ; 
+    }
+    @GetMapping(value="/reservationAnnuleeForOne/{email}")
+    public List<ReservationDTO> reservationAnnuler(@PathVariable String email){
+        return this.service.getReservationsAnnuleeForOne(email) ; 
+    }
+
+
+    @GetMapping(value = "/dataByMonth/{mois}")
+    public ResponseEntity<?> getData(@PathVariable Integer mois){
+        return new ResponseEntity<>(this.service.data(mois) , HttpStatus.OK);
+    }
+
+     @GetMapping(path="/newEarnPourcentage")
+    public ResponseEntity<?> newEarnPourcentage(){
+        Map<String ,  Object> o = this.service.newEarnPourcentage() ; 
+
+        return new ResponseEntity<>(o , HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/gainTotal")
+    public ResponseEntity<?> gainTotal(){
+        return new ResponseEntity<>(this.service.TotalEarn() , HttpStatus.OK) ; 
+    }
+
+ 
     
 
 }

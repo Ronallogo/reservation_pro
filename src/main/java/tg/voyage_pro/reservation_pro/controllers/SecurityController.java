@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RequestMapping("/tg/voyage_pro/reservation/")
+
 @CrossOrigin("*")
 @RequiredArgsConstructor
 @RestController
@@ -39,7 +40,8 @@ public class SecurityController {
 
     @PutMapping("user/update/{role}/{email}")
     public  ResponseEntity<?> userUpdate( @PathVariable String email ,  @PathVariable String role , @RequestBody UserDTO_2 data){
-        if(role == "CLIENT"){
+        System.out.println(role.equals("CLIENT"));
+        if(role.equals("CLIENT")){
             var response =  this.clientService.updateUser( data, email) ; 
             return new ResponseEntity<>(response , HttpStatus.OK) ; 
         }else{

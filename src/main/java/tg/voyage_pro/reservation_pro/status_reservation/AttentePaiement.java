@@ -19,7 +19,7 @@ public class AttentePaiement implements StatusService {
 
     @Override
     public RESERVATION MAKE_PAID(RESERVATION r) {
-        r.setStatus(STATUS.EN_ATTENTE_CONFIRMATION);
+        r.setStatus(STATUS.PAYEE);
         return r ; 
          
     }

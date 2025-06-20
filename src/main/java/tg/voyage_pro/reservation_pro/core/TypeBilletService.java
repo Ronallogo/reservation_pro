@@ -1,8 +1,10 @@
 package tg.voyage_pro.reservation_pro.core;
 
  
+import java.util.Collection;
 import java.util.List;
- 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
  
 import org.springframework.stereotype.Service;
@@ -19,13 +21,19 @@ public class TypeBilletService {
 
     private TypeBilletImpl  mapper = new TypeBilletImpl() ; 
 
+
+
+    public List<TypeBilletDTO> research(String keyword){
+        return this.mapper.toListDto(this.repo.research(keyword));
+    }
+
     public TYPE_BILLET create( TYPE_BILLET type){
         return this.repo.save(type);
     }
 
 
     public List<TypeBilletDTO> all(){
-        return  this.mapper.toListDto( this.repo.findAll())  ;
+        return  this.mapper.toListDto( this.repo.findAllDesc())  ;
         
         
     }

@@ -54,7 +54,7 @@ public class AGENT   extends ACTOR{
     private User user ; 
    
 
-    @OneToMany(mappedBy = "agent" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "agent")
     private List<PAIEMENT> paiementList ;
     
 

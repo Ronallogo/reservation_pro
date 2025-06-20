@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -57,6 +58,8 @@ public class RESERVATION implements Serializable{
 
     @Column(name = "montant" , nullable = false)
     private   Float  montant ; 
+    @Column(name="mail_agent_associe")
+    private String mailAgentAssocie ; 
 
     @ManyToOne
     @JoinColumn(name = "type_billet_id" )
@@ -65,7 +68,7 @@ public class RESERVATION implements Serializable{
     @Enumerated(EnumType.STRING)
     @Column(name = "status" , nullable = false)
     private STATUS status ;
-    @OneToMany
+    @OneToMany(mappedBy = "reservation" , cascade = CascadeType.ALL)
     private List<PAIEMENT> paiementList ;
 
 

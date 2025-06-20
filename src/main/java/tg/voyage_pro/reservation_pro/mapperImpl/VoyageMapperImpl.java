@@ -14,6 +14,7 @@ public class VoyageMapperImpl  implements VoyageMapper {
                 .departVoyage( voyage.getDepartVoyage())
                 .arriveVoyage(voyage.getArriveVoyage())
                 .dateVoyage(voyage.getDateVoyage())
+                .nbrPlaceDisponible(voyage.getNbrPlaceDisponible())
 
                 .build();
     }
@@ -24,6 +25,8 @@ public class VoyageMapperImpl  implements VoyageMapper {
                 .idVoyage(voyage.getIdVoyage())
                 .departVoyage( voyage.getDepartVoyage())
                 .arriveVoyage(voyage.getArriveVoyage())
+                .nbrPlaceDisponible(voyage.getNbrPlaceDisponible())
+                
                 .dateVoyage(voyage.getDateVoyage())
 
                 .build();
@@ -37,6 +40,7 @@ public class VoyageMapperImpl  implements VoyageMapper {
                         .departVoyage( voyage.getDepartVoyage())
                         .arriveVoyage(voyage.getArriveVoyage())
                         .dateVoyage(voyage.getDateVoyage())
+                        .nbrPlaceDisponible(voyage.getNbrPlaceDisponible())
 
                         .build()
         ).collect(Collectors.toList());

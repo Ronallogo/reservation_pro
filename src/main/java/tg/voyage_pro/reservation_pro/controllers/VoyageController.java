@@ -1,8 +1,10 @@
 package tg.voyage_pro.reservation_pro.controllers;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
- 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tg.voyage_pro.reservation_pro.Model.VOYAGE;
 import tg.voyage_pro.reservation_pro.core.VoyageService;
 import tg.voyage_pro.reservation_pro.dto.VoyageDTO;
-import org.springframework.web.bind.annotation.RequestParam;
+ 
 
 
 
@@ -66,10 +68,93 @@ public class VoyageController {
         return new ResponseEntity<>(v , HttpStatus.OK);
     }
 
+    @GetMapping(path="/recent")
+    public ResponseEntity<?> recent(){
+        return new ResponseEntity<>(this.vs.recent() ,HttpStatus.OK ) ; 
+    }
+
 
     @GetMapping("/available")
     public  List<VoyageDTO>  voyageDisponible() {
         return this.vs.voyageDisponible() ; 
     }
+
+
+    @PutMapping("/client/research")
+    public  List<VoyageDTO> gresearchForClient( 
+        @RequestBody  VoyageDTO  dto
+    ) {
+        return  this.vs.researchForClient(
+            dto.getDateVoyage() ,
+            dto.getDepartVoyage(),
+            dto.getArriveVoyage() 
+        ) ; 
+    }
+
+    @PutMapping("/agent/research")
+    public  List<VoyageDTO> gresearchForAgent(
+       
+        @RequestBody  VoyageDTO dto
+    ) {
+        return  this.vs.researchForAgent( 
+            dto.getDateVoyage() ,
+            dto.getDepartVoyage(),
+            dto.getArriveVoyage() 
+        ) ; 
+    }
+
+
+    @GetMapping(path="/agent/averageRecentVoyage")
+    public ResponseEntity<?> averageRecentVoyage(){
+        var response = this.vs.recentVoyageAverage() ; 
+        Map<String , Object> o  = new HashMap<>() ;
+        
+        o.put( "average", response) ; 
+        
+        return new ResponseEntity<>(o , HttpStatus.OK) ; 
+    }
+     
+    @GetMapping(path="/agent/volReserver")
+    public ResponseEntity<?> volReserver(){
+        var response = this.vs.volReserver() ; 
+        Map<String , Object> o  = new HashMap<>() ;
+        
+        o.put( "value", response) ; 
+        
+        return new ResponseEntity<>(o , HttpStatus.OK) ; 
+    }   
+
+
+
+    @GetMapping(value="/agent/departs")
+    public List<String>AllDepart(){
+        return this.vs.AllDepart() ; 
+
+    }
+    
+    @GetMapping(value="/agent/arrivees")
+    public List<String>AllArrivee(){
+        return this.vs.AllArrive() ; 
+
+    }
+    
+
+    @GetMapping(value="/client/arrivees")
+    public List<String> AllArriveeDispo(){
+        return this.vs.AllArriveeDisponible() ;
+    }
+
+    @GetMapping(value = "/client/departs")
+    public List<String> AllDepartDispo(){
+        return this.vs.AllDepartDisponible() ; 
+    }
+
+
+    @GetMapping(path="/top3")
+    public ResponseEntity<?> voyageTop3(){
+        return  new ResponseEntity<>(this.voyageTop3() , HttpStatus.OK);
+
+    }
+     
     
 }
