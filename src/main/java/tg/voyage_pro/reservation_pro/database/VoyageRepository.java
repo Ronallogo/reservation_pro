@@ -135,17 +135,16 @@ public interface VoyageRepository extends JpaRepository<VOYAGE , Long> {
     public List<String> AllArriveeDisponible() ;
 
     @Query(value=  """
-            SELECT 
-             v.arrive_voyage AS destination,
-             COUNT(r.id_reservation) AS nombre_reservations
+          SELECT 
+             v.arrive_voyage AS destination   
             FROM voyage v
             INNER JOIN reservation r ON v.id_voyage = r.voyage_id
             WHERE r.status != 'ANNULEE'   
             GROUP BY v.arrive_voyage
-            ORDER BY nombre_reservations DESC
+            ORDER BY  COUNT(r.id_reservation) DESC
             LIMIT 3
             """ , nativeQuery = true)
-    public List<Map<String , Object>> voyageTop3() ; 
+    public List<String> voyageTop3() ; 
 
 
 

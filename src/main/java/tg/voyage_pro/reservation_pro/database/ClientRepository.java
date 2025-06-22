@@ -76,5 +76,9 @@ public interface ClientRepository extends JpaRepository<CLIENT , Long> {
         SELECT * FROM  client WHERE mail_client = :email ;  
     """ , nativeQuery =  true)
     Optional<CLIENT> findByMailClient(String email);
+
+    
+
+
     
 }
