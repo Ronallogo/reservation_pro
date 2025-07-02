@@ -1,0 +1,26 @@
+# Étape 1 : Utiliser une image OpenJDK pour la compilation
+FROM eclipse-temurin:17-jdk-jammy AS build
+
+WORKDIR /app
+
+# Copier les fichiers de build (pom.xml, build.gradle, etc.)
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+COPY src ./src
+
+# Compiler l'application (Maven)
+RUN ./mvnw clean package -DskipTests
+
+# Étape 2 : Créer une image légère avec seulement le JAR
+FROM eclipse-temurin:17-jre-jammy
+
+WORKDIR /app
+
+# Copier le JAR depuis l'étape de build
+COPY --from=build /app/target/*.jar app.jar
+
+# Exposer le port (par défaut 8080 pour Spring Boot)
+EXPOSE 8081
+
+# Commande de démarrage
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -152,7 +152,9 @@ public class VoyageController {
 
     @GetMapping(path="/top3")
     public ResponseEntity<?> voyageTop3(){
-        return  new ResponseEntity<>(this.voyageTop3() , HttpStatus.OK);
+        var list = this.vs.voyageTop3() ; 
+        System.out.println(list.toString());
+        return  new ResponseEntity<>(list ,  HttpStatus.OK);
 
     }
      

@@ -86,9 +86,12 @@ public interface PaiementRepository extends JpaRepository<PAIEMENT , String> {
 
 
         @Query(value ="""
-        SELECT COUNT(p.code_paiement) * 100 AS nbr
-        FROM paiement p 
-        WHERE p.date_paiement >= CURRENT_DATE - INTERVAL '30 days'
+      SELECT 
+        (
+            COUNT(CASE WHEN p.date_paiement >= CURRENT_DATE - INTERVAL '1 day' THEN 1 END) * 100.0
+            / COUNT(*)
+        ) AS taux_paiement_24h
+        FROM paiement p LIMIT 100
     """ , nativeQuery =  true)
     public  Tuple  newPaiements();  
 

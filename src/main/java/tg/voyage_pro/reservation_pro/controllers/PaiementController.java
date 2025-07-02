@@ -77,6 +77,15 @@ public class PaiementController {
         return new ResponseEntity<>( o , HttpStatus.OK); 
     }
 
+
+    @GetMapping(path="/nbrPaiement")
+    public ResponseEntity<?> nbrPaiment(){
+        var response = this.service.nbrPaiement() ; 
+        Map<String , Object> o = new HashMap<>() ; 
+        o.put("value" , response);
+        return new ResponseEntity<>(o , HttpStatus.OK) ; 
+    }
+
    
 
     

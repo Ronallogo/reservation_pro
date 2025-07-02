@@ -1,5 +1,6 @@
 package tg.voyage_pro.reservation_pro.core;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
@@ -598,6 +599,23 @@ public class ReservationService {
     public Map<String  , Object> TotalEarn(){
             return this.repoReservation.gainTotal() ; 
     }
+
+    public Map<String , Object> revenuMoyen(){
+        Map<String , Object> response = new  HashMap<String  , Object>() ; 
+        var value = this.repoReservation.revenuMoyen() ; 
+
+        response.put( "value",  value);
+        return response ; 
+    }
+    public Map<String , Object>  tauxAnnulation(){
+        Map<String , Object> response = new  HashMap<String  , Object>() ; 
+        var value = this.repoReservation.tauxAnnulation() ; 
+
+        response.put( "value",  value);
+        return response ; 
+    }
+
+    
 
     
  

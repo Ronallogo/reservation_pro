@@ -164,6 +164,18 @@ public class ReservationController {
         return new ResponseEntity<>(this.service.TotalEarn() , HttpStatus.OK) ; 
     }
 
+    @GetMapping(value="/revenuMoyen")
+    public ResponseEntity<?> revenuMoyen(){
+        return new ResponseEntity<>(this.service.revenuMoyen() , HttpStatus.OK) ; 
+
+    }
+
+    @GetMapping(value = "/tauxAnnulation")
+     public ResponseEntity<?>  tauxAnnulation(){
+        return new ResponseEntity<>(this.service.tauxAnnulation() , HttpStatus.OK) ; 
+
+    }
+
  
     
 

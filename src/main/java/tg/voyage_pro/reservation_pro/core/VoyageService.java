@@ -135,15 +135,15 @@ public class VoyageService {
 
     }
 
-    public  String voyageTop3(){
+    public  List<String> voyageTop3(){
 
-     /*   List<String> listString = this.vr.voyageTop3();
+        List<String> listString = this.vr.voyageTop3();
 
         listString.forEach(x->{
             System.err.println(x);
-        });*/
+        });
                
-        return ""   ; 
+        return listString   ; 
     }
     
   

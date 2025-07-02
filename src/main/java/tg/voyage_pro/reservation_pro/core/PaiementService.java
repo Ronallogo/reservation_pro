@@ -1,6 +1,7 @@
 package tg.voyage_pro.reservation_pro.core;
 
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -221,10 +222,14 @@ public class PaiementService {
     
    
 
-    public  Long paiementRecent(){
+    public   BigDecimal paiementRecent(){
         var result =  this.repo.newPaiements() ; 
-        return( (Long) result.get("nbr") )/ 100   ; 
+        return( (BigDecimal) result.get("taux_paiement_24h") )   ; 
 
 
+    }
+
+    public  Long nbrPaiement(){
+        return this.repo.count() ; 
     }
 }

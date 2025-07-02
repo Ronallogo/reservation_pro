@@ -285,15 +285,22 @@ public interface ReservationRepository  extends JpaRepository<RESERVATION , Long
 
 
     @Query(value="""
-    SELECT (SELECT  
-                (AVG(r.montant)   /   (SELECT AVG(r2.montant) 
-                       FROM reservation r2 
-                       WHERE EXTRACT(YEAR FROM r2.date_reservation) = EXTRACT(YEAR FROM CURRENT_DATE)
-                       AND EXTRACT(MONTH FROM r2.date_reservation) = EXTRACT(MONTH FROM CURRENT_DATE)
+   SELECT (
+   	SELECT  
+                (AVG(r.montant)   /  
+                (
+                  SELECT AVG(r2.montant) 
+                 FROM reservation r2 
+                 WHERE EXTRACT(YEAR FROM r2.date_reservation) = EXTRACT(YEAR FROM CURRENT_DATE)
+                 AND r2.status = 'PAYEE'
+                       
             ))   AS avgValue 
-            FROM reservation r  
-            WHERE EXTRACT(YEAR FROM r.date_reservation) = EXTRACT(YEAR FROM CURRENT_DATE) LIMIT 100)
-    *  100 AS pourcentValue
+   FROM reservation r  
+   WHERE EXTRACT(YEAR FROM r.date_reservation) = EXTRACT(YEAR FROM CURRENT_DATE) 
+   AND EXTRACT(MONTH FROM r.date_reservation) = EXTRACT(MONTH FROM CURRENT_DATE)
+     AND r.status = 'PAYEE'
+  )
+  AS pourcentValue  
     """ , nativeQuery = true)
     public  Map<String , Object> newEarnPourcentage() ; 
 
@@ -307,6 +314,22 @@ public interface ReservationRepository  extends JpaRepository<RESERVATION , Long
     
     """ ,nativeQuery = true )
     public  Map<String , Object> gainTotal() ; 
+
+    @Query(value="""
+               SELECT AVG(r.montant) FROM reservation r
+                WHERE r.status= 'ANNULEE'
+            """ , nativeQuery = true)
+    public Double  revenuMoyen() ; 
+
+
+
+    @Query(value="""
+        SELECT 
+        (SUM(CASE WHEN status = 'ANNULEE' THEN 1 ELSE 0 END) * 100) / COUNT(*) 
+        AS pourcentage_annulees
+        FROM reservation 
+            """ , nativeQuery = true)
+    public Double tauxAnnulation();
 
 
  
