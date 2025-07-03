@@ -17,7 +17,7 @@ FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
 # Copier le JAR depuis l'étape de build
-COPY --from=build target/reservation_pro-0.0.1-SNAPSHOT.jar  app.jar
+COPY --from=build /app/target/reservation_pro-0.0.1-SNAPSHOT.jar  app.jar
 
 # Exposer le port (par défaut 8080 pour Spring Boot)
 EXPOSE 8081
