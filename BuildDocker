@@ -14,10 +14,10 @@ RUN ./mvnw clean package -DskipTests
 # Étape 2 : Créer une image légère avec seulement le JAR
 FROM eclipse-temurin:17-jre-jammy
 
-WORKDIR /reservation_pro
+WORKDIR /app
 
 # Copier le JAR depuis l'étape de build
-COPY --from=build /reservation_pro/target/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 # Exposer le port (par défaut 8080 pour Spring Boot)
 EXPOSE 8081
